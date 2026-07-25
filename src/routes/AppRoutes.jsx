@@ -35,6 +35,7 @@ import { trackPageView } from "../services/telemetryService";
 // ================= 404 =================
 
 const HomePage = lazy(() => import("../pages/Home/HomePage"));
+const CareerLandingPage = lazy(() => import("../pages/Seo/CareerLandingPage"));
 const LoginPage = lazy(() => import("../pages/Login/LoginPage"));
 const RegisterPage = lazy(() => import("../pages/Register/RegisterPage"));
 const VerificationPendingPage = lazy(() => import("../pages/Verification/VerificationPendingPage"));
@@ -102,6 +103,9 @@ const ROUTE_TITLES = {
     "/": "Home",
     "/login": "Login",
     "/register": "Create Account",
+    "/ai-resume-checker": "AI Resume Checker for ATS Feedback",
+    "/ai-mock-interview": "AI Mock Interview Practice for Freshers",
+    "/career-ai-chat": "Career AI Chat for Resume and Interview Help",
 
     "/verification-pending": "Verify Your Email",
     "/verify-email": "Verifying Email",
@@ -206,6 +210,9 @@ export default function AppRoutes() {
                     ================================================================ */}
                 <Route element={<PublicLayout />}>
                     <Route path="/" element={<HomePage />} />
+                    <Route path="/ai-resume-checker" element={<CareerLandingPage kind="resume" />} />
+                    <Route path="/ai-mock-interview" element={<CareerLandingPage kind="interview" />} />
+                    <Route path="/career-ai-chat" element={<CareerLandingPage kind="chat" />} />
 
                     {/* Auth pages */}
                     <Route path="/login" element={<LoginPage />} />

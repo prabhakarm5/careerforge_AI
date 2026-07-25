@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://careerforge.ai/sitemap.xml
+Sitemap: https://carerforge-frontend.pages.dev/sitemap.xml
