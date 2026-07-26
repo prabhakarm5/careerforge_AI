@@ -25,7 +25,6 @@ import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import PublicLayout from "../shared/PublicLayout";
-import useAuthStore from "../store/authStore";
 import { trackPageView } from "../services/telemetryService";
 
 // ================= DOCUMENTATION PAGES =================
@@ -35,7 +34,7 @@ import { trackPageView } from "../services/telemetryService";
 // ================= 404 =================
 
 const HomePage = lazy(() => import("../pages/Home/HomePage"));
-const CareerLandingPage = lazy(() => import("../pages/Seo/CareerLandingPage"));
+const CareerLandingPage = lazy(() => import("../pages/Seo/CareerSeoLandingPage"));
 const LoginPage = lazy(() => import("../pages/Login/LoginPage"));
 const RegisterPage = lazy(() => import("../pages/Register/RegisterPage"));
 const VerificationPendingPage = lazy(() => import("../pages/Verification/VerificationPendingPage"));
@@ -187,12 +186,20 @@ function AutoPageTitle() {
 
 function PageTelemetry() {
     const location = useLocation();
-    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
     useEffect(() => {
-        if (!isAuthenticated || location.pathname.startsWith("/admin")) return;
+        if (location.pathname.startsWith("/admin")) return;
+
+        // Count public discovery pages too. A short session dedupe prevents
+        // React remounts and rapid refreshes from inflating page-view data.
+        const key = `careerforge:page-view:${location.pathname}`;
+        const now = Date.now();
+        const lastTrackedAt = Number(window.sessionStorage.getItem(key) || 0);
+        if (now - lastTrackedAt < 30_000) return;
+
+        window.sessionStorage.setItem(key, String(now));
         trackPageView(location.pathname).catch(() => {});
-    }, [isAuthenticated, location.pathname]);
+    }, [location.pathname]);
 
     return null;
 }
