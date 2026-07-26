@@ -153,6 +153,10 @@ const useChatStreamStore = create((set, get) => ({
                         activeStoreKey = newKey;
                         useConversationListStore.getState().bump();
                     }
+                    writeToStore((existing) => ({
+                        ...existing,
+                        activities: Array.isArray(meta.activities) ? meta.activities.slice(0, 5) : [],
+                    }));
                     onMeta && onMeta(meta);
                 } catch {
                     /* ignore malformed meta */

@@ -1661,6 +1661,17 @@ export default function ChatPage() {
                     <span>Thinking</span><i /><i /><i />
                   </div>
                 )}
+                {liveStream?.activities?.length > 0 && (
+                  <aside className="mx-0.5 flex max-w-[680px] flex-wrap items-center gap-1.5 rounded-lg border border-cyan-900/60 bg-cyan-950/20 px-2.5 py-2 text-[10px] text-cyan-100/85" aria-label="Context used for this answer">
+                    <span className="font-semibold text-cyan-300">Context used</span>
+                    {liveStream.activities.map((activity, index) => activity.url ? (
+                      <a className="max-w-[190px] truncate rounded bg-cyan-900/35 px-1.5 py-0.5 text-cyan-100 underline-offset-2 hover:underline" href={activity.url} target="_blank" rel="noreferrer" key={`${activity.url}-${index}`}>{activity.label}</a>
+                    ) : (
+                      <span className="rounded bg-slate-800/80 px-1.5 py-0.5 text-slate-300" key={`${activity.kind}-${index}`}>{activity.label}</span>
+                    ))}
+                  </aside>
+                )}
+
                 {liveStream && liveStream.text && !liveStreamCommitted && (
                   <div className="msg-block">
                     <MessageRow
