@@ -26,16 +26,13 @@ export default function AdminLoginPage() {
   const login = useAuthStore((state) => state.login);
 
   const [step, setStep] = useState("credentials"); // credentials | otp | granted
-  const [form, setForm] = useState({ email: "", password: "", otp: "" });
+  const [form, setForm] = useState(() => ({ email: searchParams.get("email")?.trim() || "", password: "", otp: "" }));
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const otpRefs = useRef([]);
 
-  useEffect(() => {
-    const email = searchParams.get("email")?.trim();
-    if (email) setForm((current) => ({ ...current, email }));
-  }, [searchParams]);
+
   useEffect(() => {
     if (cooldown <= 0) return undefined;
     const id = setInterval(() => setCooldown((value) => value - 1), 1000);
@@ -156,6 +153,11 @@ export default function AdminLoginPage() {
                 ? "Use your administrator credentials."
                 : `Enter the code sent to ${form.email}.`}
             </p>
+            <div className="admin-auth-steps" aria-label="Authentication progress">
+              <span className="complete"><b>1</b>Credentials</span>
+              <i />
+              <span className={step === "otp" ? "active" : ""}><b>2</b>One-time code</span>
+            </div>
 
             {step === "credentials" ? (
               <>
@@ -218,11 +220,18 @@ export default function AdminLoginPage() {
                     onKeyDown={(event) => handleOtpKeyDown(index, event)}
                     disabled={loading}
                     autoFocus={index === 0}
+                    autoComplete={index === 0 ? "one-time-code" : "off"}
                     aria-label={`Digit ${index + 1} of 6`}
                   />
                 ))}
               </div>
             )}
+
+            {step === "otp" && <div className="admin-otp-security-note" aria-live="polite">
+              <ShieldCheck size={15} />
+              <span>This code is single-use. Resend unlocks in {cooldown}s.</span>
+              <i style={{ "--otp-progress": `${Math.max(0, cooldown / RESEND_COOLDOWN) * 100}%` }} />
+            </div>}
 
             <button
               className="admin-primary-button"
