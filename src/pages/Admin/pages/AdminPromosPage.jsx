@@ -2,20 +2,11 @@ import { RefreshCw, Zap, ZapOff } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { deleteAdminPromo, getAdminPlans, getAdminPromos } from "../../../services/adminService";
-import { PromosPanel } from "../components/CommercePanels";
+import { CommerceSyncStatus, PromosPanel } from "../components/CommercePanels";
 import EditorModal from "../components/EditorModal";
 import { requestError } from "../components/AdminUi";
 
 const AUTO_REFRESH_MS = 20000;
-
-function formatRelativeTime(timestamp, now) {
-  if (!timestamp) return "—";
-  const seconds = Math.max(0, Math.round((now - timestamp) / 1000));
-  if (seconds < 3) return "just now";
-  if (seconds < 60) return `${seconds}s ago`;
-  const minutes = Math.round(seconds / 60);
-  return `${minutes}m ago`;
-}
 
 export default function AdminPromosPage() {
   const [promos, setPromos] = useState([]);
@@ -24,7 +15,6 @@ export default function AdminPromosPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [lastSynced, setLastSynced] = useState(null);
-  const [now, setNow] = useState(Date.now());
   const [editor, setEditor] = useState(null);
 
   // Only the very first fetch shows the full skeleton — every load after
@@ -64,12 +54,6 @@ export default function AdminPromosPage() {
     return () => window.clearInterval(interval);
   }, [autoRefresh, load]);
 
-  // Ticks the "synced Xs ago" label once a second.
-  useEffect(() => {
-    const interval = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => window.clearInterval(interval);
-  }, []);
-
   // Removes the promo from view immediately instead of waiting on a full
   // reload, then reconciles with the server in the background. Rolls back
   // cleanly if the delete actually fails.
@@ -90,15 +74,7 @@ export default function AdminPromosPage() {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-end gap-2">
-        <span className="flex items-center gap-1.5 font-mono text-[11px] text-slate-500">
-          {autoRefresh && (
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            </span>
-          )}
-          synced {formatRelativeTime(lastSynced, now)}
-        </span>
+        <CommerceSyncStatus timestamp={lastSynced} live={autoRefresh} />
 
         <button
           onClick={() => setAutoRefresh((value) => !value)}

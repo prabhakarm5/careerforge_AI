@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Menu, Zap, User, Settings, LogOut, Shield, Star, Crown, Sparkles, ChevronLeft, AlertTriangle } from "lucide-react";
+import { Menu, RefreshCw, Zap, User, Settings, LogOut, Shield, Star, Crown, Sparkles, ChevronLeft, AlertTriangle } from "lucide-react";
 import useAuthStore from "../../store/authStore";
 import { WORKSPACE_CONTEXT_EVENT } from "../../services/workspaceEvents";
 import BrandLogo from "../../shared/BrandLogo";
@@ -88,10 +88,13 @@ function Avatar({ user, size = 26 }) {
   );
 }
 
-function IBtn({ onClick, children, style = {}, className = "" }) {
+function IBtn({ onClick, children, style = {}, className = "", title }) {
   return (
     <button
+      type="button"
       onClick={onClick}
+      title={title}
+      aria-label={title}
       className={`topbar-ibtn inline-flex items-center justify-center ${className}`}
       style={{
         width: 28, height: 28, borderRadius: 9, border: `1px solid ${BORDER}`, cursor: "pointer",
@@ -518,7 +521,7 @@ export default function Topbar({ setSidebarOpen, wallet, onRefreshWallet, wallet
   return (
     <header className="dashboard-global-topbar" style={headerStyle}>
       <div style={{ height: TOPBAR_H, width: "100%", boxSizing: "border-box", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 8px" }}>
-        <IBtn onClick={() => setSidebarOpen(true)} className="lg:hidden" style={{ marginLeft: -2 }}>
+        <IBtn onClick={() => setSidebarOpen(true)} className="lg:hidden" style={{ marginLeft: -2 }} title="Open navigation">
           <Menu size={15} />
         </IBtn>
 
@@ -532,6 +535,9 @@ export default function Topbar({ setSidebarOpen, wallet, onRefreshWallet, wallet
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 7, flexShrink: 0, minWidth: 0 }}>
+          <IBtn onClick={() => window.location.reload()} title="Refresh current page">
+            <RefreshCw size={14} />
+          </IBtn>
           <TokenBadge wallet={wallet} />
 
           <div ref={avatarWrapRef} style={{ position: "relative" }}>

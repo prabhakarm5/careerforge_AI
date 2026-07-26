@@ -1942,3 +1942,10 @@
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+.admin-commerce-sync {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #64748b;
+  font: 10px ui-monospace, SFMono-Regular, Consolas, monospace;
+}

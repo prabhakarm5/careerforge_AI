@@ -32,13 +32,27 @@ const NAVIGATION = [
 
 const COLLAPSED_KEY = "cf_admin_sidebar_collapsed";
 
+function AdminClock() {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+  return <div className="admin-live-clock" aria-label="Current local time">
+    <Clock3 size={16} />
+    <div>
+      <strong>{now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</strong>
+      <span>{now.toLocaleDateString([], { weekday: "short", day: "2-digit", month: "short" })} - Local time</span>
+    </div>
+  </div>;
+}
+
 export default function AdminLayout() {
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
   const logoutEverywhere = useAuthStore((state) => state.logoutEverywhere);
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem(COLLAPSED_KEY) === "1");
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [now, setNow] = useState(() => new Date());
 
   const activeLabel = useMemo(
     () => NAVIGATION.find((item) => location.pathname.startsWith(item.to))?.label || "Admin",
@@ -48,11 +62,6 @@ export default function AdminLayout() {
   useEffect(() => {
     localStorage.setItem(COLLAPSED_KEY, collapsed ? "1" : "0");
   }, [collapsed]);
-
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(new Date()), 1000);
-    return () => window.clearInterval(timer);
-  }, []);
 
 
   useEffect(() => {
@@ -110,13 +119,8 @@ export default function AdminLayout() {
             <span className="text-[10px] font-bold uppercase text-cyan-300">Operations console</span>
             <h1 className="truncate text-base font-bold text-white">{activeLabel}</h1>
           </div>
-          <div className="admin-live-clock" aria-label="Current local time">
-            <Clock3 size={16} />
-            <div>
-              <strong>{now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</strong>
-              <span>{now.toLocaleDateString([], { weekday: "short", day: "2-digit", month: "short" })} · Local time</span>
-            </div>
-          </div>
+          <AdminClock />
+
         </header>
         <main className="mx-auto h-[calc(100dvh-56px)] w-full max-w-[1600px] overflow-x-hidden overflow-y-auto p-3 sm:p-5 lg:h-[calc(100dvh-64px)] lg:p-7">
           <Outlet />

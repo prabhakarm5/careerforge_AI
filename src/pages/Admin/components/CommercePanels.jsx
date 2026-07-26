@@ -31,6 +31,30 @@ function LiveDot() {
   return <span className="relative flex h-1.5 w-1.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" /></span>;
 }
 
+function formatRelativeTime(timestamp, now) {
+  if (!timestamp) return "not synced";
+  const seconds = Math.max(0, Math.round((now - timestamp) / 1000));
+  if (seconds < 5) return "just now";
+  if (seconds < 60) return `${seconds}s ago`;
+  return `${Math.round(seconds / 60)}m ago`;
+}
+
+export function CommerceSyncStatus({ timestamp, live }) {
+  const [now, setNow] = useState(() => timestamp || 0);
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setNow(Date.now()));
+    const timer = window.setInterval(() => setNow(Date.now()), 10000);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearInterval(timer);
+    };
+  }, []);
+  return <span className="admin-commerce-sync">
+    {live && <LiveDot />}
+    synced {formatRelativeTime(timestamp, now)}
+  </span>;
+}
+
 function SkeletonCard() {
   return <article className="admin-commerce-card admin-commerce-skeleton">
     <div className="h-9 w-9 animate-pulse rounded-md bg-white/10" />
