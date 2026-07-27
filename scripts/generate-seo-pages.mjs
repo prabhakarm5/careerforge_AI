@@ -23,7 +23,7 @@ function staticPage(page) {
     <div class="seo-static">
       <nav aria-label="Main navigation">
         <a class="brand" href="/">CareerForge AI</a>
-        <div><a href="/ai-resume-checker">Resume</a><a href="/ai-mock-interview">Interview</a><a href="/career-ai-chat">Career Chat</a></div>
+        <div><a href="/ai-resume-checker/">Resume</a><a href="/ai-mock-interview/">Interview</a><a href="/career-ai-chat/">Career Chat</a></div>
       </nav>
       <main>
         <header class="hero">
@@ -74,9 +74,9 @@ function homeStaticPage() {
           <h2>One connected workspace for career preparation</h2>
           <p>CareerForge AI connects mock interviews, ATS resume analysis, career chat, live jobs, cover letters, and image tools around one account and credit wallet.</p>
           <div class="grid">
-            <article><h3><a href="/ai-mock-interview">AI mock interview for freshers</a></h3><p>Practise voice or written interviews with resume-aware follow-ups and a final report.</p></article>
-            <article><h3><a href="/ai-resume-checker">AI resume checker</a></h3><p>Find ATS gaps, compare a resume with a job description, and create an improved version.</p></article>
-            <article><h3><a href="/career-ai-chat">Career AI chat</a></h3><p>Continue saved conversations about interviews, projects, resumes, coding, and job-search decisions.</p></article>
+            <article><h3><a href="/ai-mock-interview/">AI mock interview for freshers</a></h3><p>Practise voice or written interviews with resume-aware follow-ups and a final report.</p></article>
+            <article><h3><a href="/ai-resume-checker/">AI resume checker</a></h3><p>Find ATS gaps, compare a resume with a job description, and create an improved version.</p></article>
+            <article><h3><a href="/career-ai-chat/">Career AI chat</a></h3><p>Continue saved conversations about interviews, projects, resumes, coding, and job-search decisions.</p></article>
           </div>
         </section>
         <section>
@@ -174,7 +174,7 @@ export async function generateSeoPages() {
   ];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map(([path, priority]) => `  <url><loc>${SITE_URL}/${path}</loc><lastmod>${TODAY}</lastmod><changefreq>weekly</changefreq><priority>${priority}</priority></url>`).join("\n")}
+${urls.map(([path, priority]) => `  <url><loc>${SITE_URL}/${path}${path ? "/" : ""}</loc><lastmod>${TODAY}</lastmod><changefreq>weekly</changefreq><priority>${priority}</priority></url>`).join("\n")}
 </urlset>
 `;
   await writeFile(resolve(DIST_DIR, "sitemap.xml"), sitemap, "utf8");

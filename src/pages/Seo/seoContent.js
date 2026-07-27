@@ -133,5 +133,5 @@ export const SEO_PAGES = {
 };
 
 export function pageCanonical(page) {
-  return `${SITE_URL}/${page.slug}`;
+  return `${SITE_URL}/${page.slug}/`;
 }
