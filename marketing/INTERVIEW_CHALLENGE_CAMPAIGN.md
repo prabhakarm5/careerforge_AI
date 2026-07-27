@@ -44,6 +44,8 @@ Interview ke liye ready ho, ya sirf answers yaad kiye hain?
 Take this free 3-minute interview readiness test. Signup ki zarurat nahi hai.
 Four real situations answer karo, instant score aur improvement plan pao.
 
+Full AI interview practice ke liye verified new account par 100 starter credits free milte hain. No card required.
+
 Start here:
 https://carerforge-frontend.pages.dev/interview-challenge/?utm_source=instagram&utm_medium=organic&utm_campaign=interview_challenge
 
