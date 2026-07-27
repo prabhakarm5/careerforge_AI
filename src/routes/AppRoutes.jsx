@@ -35,6 +35,7 @@ import { trackPageView } from "../services/telemetryService";
 
 const HomePage = lazy(() => import("../pages/Home/HomePage"));
 const CareerLandingPage = lazy(() => import("../pages/Seo/CareerSeoLandingPage"));
+const InterviewChallengePage = lazy(() => import("../pages/Seo/InterviewChallengePage"));
 const LoginPage = lazy(() => import("../pages/Login/LoginPage"));
 const RegisterPage = lazy(() => import("../pages/Register/RegisterPage"));
 const VerificationPendingPage = lazy(() => import("../pages/Verification/VerificationPendingPage"));
@@ -105,6 +106,7 @@ const ROUTE_TITLES = {
     "/ai-resume-checker": "AI Resume Checker for ATS Feedback",
     "/ai-mock-interview": "AI Mock Interview Practice for Freshers",
     "/career-ai-chat": "Career AI Chat for Resume and Interview Help",
+    "/interview-challenge": "Free Interview Readiness Test",
 
     "/verification-pending": "Verify Your Email",
     "/verify-email": "Verifying Email",
@@ -192,14 +194,19 @@ function PageTelemetry() {
 
         // Count public discovery pages too. A short session dedupe prevents
         // React remounts and rapid refreshes from inflating page-view data.
-        const key = `careerforge:page-view:${location.pathname}`;
+        const source = new URLSearchParams(location.search).get("utm_source")
+            ?.toLowerCase()
+            .replace(/[^a-z0-9_-]/g, "")
+            .slice(0, 24);
+        const trackedPath = source ? `${location.pathname}/source/${source}` : location.pathname;
+        const key = `careerforge:page-view:${trackedPath}`;
         const now = Date.now();
         const lastTrackedAt = Number(window.sessionStorage.getItem(key) || 0);
         if (now - lastTrackedAt < 30_000) return;
 
         window.sessionStorage.setItem(key, String(now));
-        trackPageView(location.pathname).catch(() => {});
-    }, [location.pathname]);
+        trackPageView(trackedPath).catch(() => {});
+    }, [location.pathname, location.search]);
 
     return null;
 }
@@ -220,6 +227,7 @@ export default function AppRoutes() {
                     <Route path="/ai-resume-checker" element={<CareerLandingPage kind="resume" />} />
                     <Route path="/ai-mock-interview" element={<CareerLandingPage kind="interview" />} />
                     <Route path="/career-ai-chat" element={<CareerLandingPage kind="chat" />} />
+                    <Route path="/interview-challenge" element={<InterviewChallengePage />} />
 
                     {/* Auth pages */}
                     <Route path="/login" element={<LoginPage />} />

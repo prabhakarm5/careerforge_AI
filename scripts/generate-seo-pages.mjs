@@ -88,6 +88,32 @@ function homeStaticPage() {
     </div>`;
 }
 
+function challengeStaticPage() {
+  return `
+    <div class="seo-static">
+      <nav aria-label="Main navigation"><a class="brand" href="/">CareerForge AI</a><div><a href="/login">Log in</a><a href="/register">Create free account</a></div></nav>
+      <main>
+        <header class="hero">
+          <p class="eyebrow">Free 3-minute interview challenge</p>
+          <h1>Free Interview Readiness Test for Freshers</h1>
+          <p class="lead">Answer four realistic interview situations without signing up. Get an instant readiness score and a practical improvement plan.</p>
+          <a class="cta" href="/interview-challenge/">Take the free test</a>
+          <small>No signup, no card, and no personal data required.</small>
+        </header>
+        <section>
+          <h2>Test the skills interviewers actually notice</h2>
+          <p>The challenge checks answer clarity, role readiness, evidence from projects or internships, and composure when you do not know a complete answer.</p>
+          <div class="grid">
+            <article><h3>Choose your role</h3><p>Pick Java Developer, Frontend Developer, Data Analyst, or General Fresher.</p></article>
+            <article><h3>Answer four situations</h3><p>Choose how you would respond to introductions, role questions, project evidence, and uncertainty.</p></article>
+            <article><h3>Get an instant plan</h3><p>See your score by skill and the three practice actions that will help most.</p></article>
+          </div>
+        </section>
+        <section><h2>Continue with a full mock interview</h2><p>Create an account with starter credits and practise a resume-aware voice or written interview in Hindi or English.</p></section>
+      </main>
+      <footer><a href="/privacy-policy/">Privacy</a><a href="/terms/">Terms</a><a href="/contact/">Support</a></footer>
+    </div>`;
+}
 const STATIC_STYLE = `
   <style id="seo-static-style">
     .seo-static{min-height:100vh;background:#060a12;color:#e8eef8;font:16px/1.7 Arial,sans-serif}
@@ -152,6 +178,25 @@ function setHomeStatic(html) {
     .replace('<div id="root"></div>', `<div id="root">${homeStaticPage()}</div>`);
 }
 
+function setChallengeStatic(html) {
+  const canonical = `${SITE_URL}/interview-challenge/`;
+  const title = "Free Interview Readiness Test for Freshers | CareerForge AI";
+  const description = "Take a free 3-minute interview readiness test without signing up. Get an instant score and a practical improvement plan.";
+  const schema = { "@context": "https://schema.org", "@type": "Quiz", name: title, description, url: canonical, educationalLevel: "Beginner" };
+  return html
+    .replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`)
+    .replace(/<meta name="description"[^>]*>/i, `<meta name="description" content="${description}">`)
+    .replace(/<link rel="canonical"[^>]*>/i, `<link rel="canonical" href="${canonical}">`)
+    .replace(/<meta property="og:title"[^>]*>/i, `<meta property="og:title" content="${title}">`)
+    .replace(/<meta property="og:description"[^>]*>/i, `<meta property="og:description" content="${description}">`)
+    .replace(/<meta property="og:url"[^>]*>/i, `<meta property="og:url" content="${canonical}">`)
+    .replace(/<meta property="og:image"[^>]*>/i, `<meta property="og:image" content="${SITE_URL}/marketing/interview-challenge-ad.png">`)
+    .replace(/<meta property="og:image:width"[^>]*>/i, `<meta property="og:image:width" content="1122">`)
+    .replace(/<meta property="og:image:height"[^>]*>/i, `<meta property="og:image:height" content="1402">`)
+    .replace(/<meta name="twitter:image"[^>]*>/i, `<meta name="twitter:image" content="${SITE_URL}/marketing/interview-challenge-ad.png">`)
+    .replace("</head>", `${STATIC_STYLE}<script type="application/ld+json">${JSON.stringify(schema)}</script></head>`)
+    .replace('<div id="root"></div>', `<div id="root">${challengeStaticPage()}</div>`);
+}
 export async function generateSeoPages() {
   const templatePath = resolve(DIST_DIR, "index.html");
   const template = await readFile(templatePath, "utf8");
@@ -163,8 +208,12 @@ export async function generateSeoPages() {
     await writeFile(resolve(directory, "index.html"), setMeta(template, page), "utf8");
   }
 
+  const challengeDirectory = resolve(DIST_DIR, "interview-challenge");
+  await mkdir(challengeDirectory, { recursive: true });
+  await writeFile(resolve(challengeDirectory, "index.html"), setChallengeStatic(template), "utf8");
   const urls = [
     ["", "1.0"],
+    ["interview-challenge", "1.0"],
     ...Object.values(SEO_PAGES).map((page) => [page.slug, "0.9"]),
     ["privacy-policy", "0.4"],
     ["terms", "0.4"],

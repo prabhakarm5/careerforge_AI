@@ -226,8 +226,8 @@ export default function HomePage() {
               Run role-specific mock interviews with your resume and job description, answer by voice or text, and receive grounded follow-ups and evidence-based feedback. Resume, chat, jobs, and image tools stay connected around the same career journey.
             </p>
             <div className="cf-home-reveal cf-home-reveal-delay mt-7 flex flex-col gap-3 sm:flex-row">
-              <Link to="/register?next=%2Finterview" className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-cyan-400 px-6 text-sm font-black text-[#031318] hover:bg-cyan-300">
-                Start a mock interview <Mic2 size={18} />
+              <Link to="/interview-challenge" className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-cyan-400 px-6 text-sm font-black text-[#031318] hover:bg-cyan-300">
+                Take the free 3-minute test <Mic2 size={18} />
               </Link>
               <a href="#features" className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-white/25 bg-black/35 px-6 text-sm font-black text-white backdrop-blur hover:bg-black/55">
                 Explore every workspace <ArrowRight size={18} />
@@ -301,8 +301,8 @@ export default function HomePage() {
             <p className="text-xs font-black uppercase">Ready when you are</p>
             <h2 className="mt-2 text-3xl font-black sm:text-4xl">Practise the interview. Improve the evidence. Earn the offer.</h2>
           </div>
-          <Link to="/register?next=%2Finterview" className="inline-flex h-12 shrink-0 items-center gap-2 rounded-lg bg-[#06101a] px-6 text-sm font-black text-white">
-            Start interview practice <ArrowRight size={18} />
+          <Link to="/interview-challenge" className="inline-flex h-12 shrink-0 items-center gap-2 rounded-lg bg-[#06101a] px-6 text-sm font-black text-white">
+            Check interview readiness <ArrowRight size={18} />
           </Link>
         </div>
       </section>
