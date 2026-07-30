@@ -6,52 +6,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
     <meta name="theme-color" content="#07060e" />
 
-    <!-- ✅ Primary SEO tags — values now come from .env via Vite's
-         Vite environment placeholder syntax, not hardcoded -->
-    <title>%VITE_SITE_TITLE%</title>
-    <meta name="description" content="%VITE_SITE_DESCRIPTION%" />
+    <!-- Public SEO defaults are finalized for each route during the production build. -->
+    <title>CareerForge AI - AI Mock Interview, ATS Resume Checker and Career Chat</title>
+    <meta
+      name="description"
+      content="Practise resume-aware AI mock interviews in Hindi or English, check ATS resume gaps, and continue career guidance in one connected workspace."
+    />
     <meta
       name="keywords"
-      content="AI resume builder, ATS resume checker, AI career chat, AI coding assistant, interview preparation AI , resume optimization, career tools"
+      content="AI mock interview, AI interview practice, ATS resume checker, AI resume builder, fresher interview preparation, Hindi interview practice, career AI chat"
     />
-    <meta name="author" content="%VITE_SITE_NAME%" />
-    <link rel="canonical" href="%VITE_SITE_URL%" />
+    <meta name="author" content="CareerForge AI" />
+    <link rel="canonical" href="https://carerforge-frontend.pages.dev/" />
+    <link rel="sitemap" type="application/xml" href="https://carerforge-frontend.pages.dev/sitemap.xml" />
 
-    <!-- ✅ Open Graph -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="%VITE_SITE_NAME%" />
-    <meta property="og:title" content="%VITE_SITE_TITLE%" />
-    <meta property="og:description" content="%VITE_SITE_DESCRIPTION%" />
-    <meta property="og:image" content="%VITE_SITE_URL%og-preview.png" />
+    <meta property="og:site_name" content="CareerForge AI" />
+    <meta property="og:title" content="CareerForge AI - AI Mock Interview, ATS Resume Checker and Career Chat" />
+    <meta
+      property="og:description"
+      content="Practise resume-aware AI mock interviews in Hindi or English, check ATS resume gaps, and continue career guidance in one connected workspace."
+    />
+    <meta property="og:image" content="https://carerforge-frontend.pages.dev/og-preview.png" />
+    <meta property="og:image:alt" content="CareerForge AI interview and resume preparation workspace" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:url" content="%VITE_SITE_URL%" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="https://carerforge-frontend.pages.dev/" />
+    <meta property="og:locale" content="en_IN" />
 
-    <!-- ✅ Twitter / X card -->
+    <!-- Twitter / X card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="%VITE_SITE_TITLE%" />
-    <meta name="twitter:description" content="%VITE_SITE_DESCRIPTION%" />
-    <meta name="twitter:image" content="%VITE_SITE_URL%og-preview.png" />
+    <meta name="twitter:title" content="CareerForge AI - AI Mock Interview, ATS Resume Checker and Career Chat" />
+    <meta
+      name="twitter:description"
+      content="Practise resume-aware AI mock interviews in Hindi or English, check ATS resume gaps, and continue career guidance in one connected workspace."
+    />
+    <meta name="twitter:image" content="https://carerforge-frontend.pages.dev/og-preview.png" />
 
-    <!-- ✅ Robots -->
-    <meta name="robots" content="index, follow" />
+    <!-- Search indexing -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="google-site-verification" content="0lIW9zk7HBDDd3jkOiE9U0iqM8ohrhehHPJ0xRRjGow" />
 
-    <!-- ✅ Structured data -->
+    <!-- Structured data -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "%VITE_SITE_NAME%",
-        "url": "%VITE_SITE_URL%",
-        "description": "%VITE_SITE_DESCRIPTION%",
-        "applicationCategory": "BusinessApplication",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        }
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://carerforge-frontend.pages.dev/#website",
+            "name": "CareerForge AI",
+            "url": "https://carerforge-frontend.pages.dev/",
+            "inLanguage": ["en", "hi"]
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://carerforge-frontend.pages.dev/#application",
+            "name": "CareerForge AI",
+            "url": "https://carerforge-frontend.pages.dev/",
+            "description": "AI mock interview, ATS resume review, and career guidance workspace for freshers and job seekers.",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "inLanguage": ["en", "hi"],
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "INR"
+            }
+          }
+        ]
       }
     </script>
   </head>

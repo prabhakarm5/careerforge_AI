@@ -4,6 +4,7 @@ import { pageCanonical, SEO_PAGES, SITE_URL } from "../src/pages/Seo/seoContent.
 
 const DIST_DIR = resolve(process.cwd(), "dist");
 const TODAY = new Date().toISOString().slice(0, 10);
+const OG_IMAGE = `${SITE_URL}/og-preview.png`;
 
 function escapeHtml(value) {
   return String(value)
@@ -159,9 +160,12 @@ function setMeta(html, page) {
     .replace(/<meta property="og:title"[^>]*>/i, `<meta property="og:title" content="${escapeHtml(title)}">`)
     .replace(/<meta property="og:description"[^>]*>/i, `<meta property="og:description" content="${escapeHtml(page.description)}">`)
     .replace(/<meta property="og:url"[^>]*>/i, `<meta property="og:url" content="${canonical}">`)
+    .replace(/<meta property="og:image"[^>]*>/i, `<meta property="og:image" content="${OG_IMAGE}">`)
     .replace(/<meta name="twitter:title"[^>]*>/i, `<meta name="twitter:title" content="${escapeHtml(title)}">`)
     .replace(/<meta name="twitter:description"[^>]*>/i, `<meta name="twitter:description" content="${escapeHtml(page.description)}">`)
-    .replace("</head>", `${STATIC_STYLE}<script type="application/ld+json">${JSON.stringify(appSchema)}</script><script type="application/ld+json">${JSON.stringify(faqSchema)}</script></head>`)
+    .replace(/<meta name="twitter:image"[^>]*>/i, `<meta name="twitter:image" content="${OG_IMAGE}">`)
+    .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/i, `<script type="application/ld+json">${JSON.stringify(appSchema)}</script>`)
+    .replace("</head>", `${STATIC_STYLE}<script type="application/ld+json">${JSON.stringify(faqSchema)}</script></head>`)
     .replace('<div id="root"></div>', `<div id="root">${staticPage(page)}</div>`);
 }
 
@@ -169,11 +173,41 @@ function setHomeStatic(html) {
   const canonical = `${SITE_URL}/`;
   const title = "CareerForge AI - AI Mock Interview, Resume Checker and Career Chat";
   const description = "Practise resume-aware AI mock interviews in Hindi or English, check ATS resume gaps, and continue career guidance in one connected workspace.";
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${canonical}#website`,
+        name: "CareerForge AI",
+        url: canonical,
+        inLanguage: ["en", "hi"],
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": `${canonical}#application`,
+        name: "CareerForge AI",
+        url: canonical,
+        description,
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web",
+        inLanguage: ["en", "hi"],
+        offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
+      },
+    ],
+  };
   return html
     .replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`)
     .replace(/<meta name="description"[^>]*>/i, `<meta name="description" content="${description}">`)
     .replace(/<link rel="canonical"[^>]*>/i, `<link rel="canonical" href="${canonical}">`)
+    .replace(/<meta property="og:title"[^>]*>/i, `<meta property="og:title" content="${title}">`)
+    .replace(/<meta property="og:description"[^>]*>/i, `<meta property="og:description" content="${description}">`)
     .replace(/<meta property="og:url"[^>]*>/i, `<meta property="og:url" content="${canonical}">`)
+    .replace(/<meta property="og:image"[^>]*>/i, `<meta property="og:image" content="${OG_IMAGE}">`)
+    .replace(/<meta name="twitter:title"[^>]*>/i, `<meta name="twitter:title" content="${title}">`)
+    .replace(/<meta name="twitter:description"[^>]*>/i, `<meta name="twitter:description" content="${description}">`)
+    .replace(/<meta name="twitter:image"[^>]*>/i, `<meta name="twitter:image" content="${OG_IMAGE}">`)
+    .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/i, `<script type="application/ld+json">${JSON.stringify(schema)}</script>`)
     .replace("</head>", `${STATIC_STYLE}</head>`)
     .replace('<div id="root"></div>', `<div id="root">${homeStaticPage()}</div>`);
 }
@@ -194,7 +228,8 @@ function setChallengeStatic(html) {
     .replace(/<meta property="og:image:width"[^>]*>/i, `<meta property="og:image:width" content="1122">`)
     .replace(/<meta property="og:image:height"[^>]*>/i, `<meta property="og:image:height" content="1402">`)
     .replace(/<meta name="twitter:image"[^>]*>/i, `<meta name="twitter:image" content="${SITE_URL}/marketing/interview-challenge-ad.png">`)
-    .replace("</head>", `${STATIC_STYLE}<script type="application/ld+json">${JSON.stringify(schema)}</script></head>`)
+    .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/i, `<script type="application/ld+json">${JSON.stringify(schema)}</script>`)
+    .replace("</head>", `${STATIC_STYLE}</head>`)
     .replace('<div id="root"></div>', `<div id="root">${challengeStaticPage()}</div>`);
 }
 export async function generateSeoPages() {
@@ -227,7 +262,11 @@ ${urls.map(([path, priority]) => `  <url><loc>${SITE_URL}/${path}${path ? "/" : 
 </urlset>
 `;
   await writeFile(resolve(DIST_DIR, "sitemap.xml"), sitemap, "utf8");
-  await writeFile(resolve(DIST_DIR, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`, "utf8");
+  await writeFile(
+    resolve(DIST_DIR, "robots.txt"),
+    `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\nHost: ${SITE_URL}\n`,
+    "utf8",
+  );
 }
 
 await generateSeoPages();

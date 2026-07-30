@@ -1,4 +1,10 @@
-export const SITE_URL = "https://carerforge-frontend.pages.dev";
+const DEFAULT_SITE_URL = "https://carerforge-frontend.pages.dev";
+const configuredSiteUrl =
+  globalThis.process?.env?.VITE_SITE_URL ||
+  import.meta.env?.VITE_SITE_URL ||
+  DEFAULT_SITE_URL;
+
+export const SITE_URL = configuredSiteUrl.replace(/\/+$/, "");
 
 export const SEO_PAGES = {
   resume: {
