@@ -23,6 +23,7 @@ function ActionButton({ icon: Icon, label, onClick, danger = false, active = fal
 export default function GeneratedImageCard({ image, onDeleted, onFavorite, onRegenerated }) {
   const [busyAction, setBusyAction] = useState("");
   const [fullscreen, setFullscreen] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
   const [copied, setCopied] = useState(false);
 
   if (!image) return null;
@@ -74,13 +75,18 @@ export default function GeneratedImageCard({ image, onDeleted, onFavorite, onReg
   function handleDownload() {
     if (!imageUrl) return toast.error("Image URL is unavailable.");
     runAction("Download", async () => {
-      const result = hasSavedId ? await downloadImage(image.id) : null;
+      if (!hasSavedId) throw new Error("Save the image before downloading it.");
+      const result = await downloadImage(image.id);
+      if (!result?.blob) throw new Error("The downloaded image is empty.");
+      const objectUrl = URL.createObjectURL(result.blob);
       const link = document.createElement("a");
-      link.href = result?.downloadUrl || imageUrl;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.download = `careerforge-image-${image.id || Date.now()}.png`;
+      link.href = objectUrl;
+      link.download = result.fileName || `careerforge-image-${image.id}.png`;
+      document.body.appendChild(link);
       link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+      toast.success("Image downloaded");
     });
   }
 
@@ -114,7 +120,13 @@ export default function GeneratedImageCard({ image, onDeleted, onFavorite, onReg
 
         <div className="relative flex min-h-[300px] flex-1 items-center justify-center overflow-hidden bg-[#03050b] p-2 sm:p-4">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(217,70,239,0.08),transparent_42%)]" />
-          {imageUrl ? <img src={imageUrl} alt={image.prompt || "Generated image"} className="relative max-h-[62dvh] w-full rounded-lg object-contain" /> : <ImageIcon size={64} className="relative text-slate-800" />}
+          {imageUrl && !imageFailed ? <img src={imageUrl} alt={image.prompt || "Generated image"} onError={() => setImageFailed(true)} className="relative max-h-[62dvh] w-full rounded-lg object-contain" /> : (
+            <div className="relative flex flex-col items-center text-center text-slate-600">
+              <ImageIcon size={64} className="text-slate-800" />
+              <p className="mt-3 text-xs font-bold">Preview could not be loaded</p>
+              {imageUrl && <button type="button" onClick={() => setImageFailed(false)} className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-bold text-fuchsia-300"><RefreshCcw size={12} /> Retry preview</button>}
+            </div>
+          )}
         </div>
 
         <div className="shrink-0 space-y-3 border-t border-white/[0.07] p-3 sm:p-4">
@@ -134,7 +146,7 @@ export default function GeneratedImageCard({ image, onDeleted, onFavorite, onReg
         </div>
       </article>
 
-      {fullscreen && <div className="fixed inset-0 z-[1600] grid place-items-center bg-black/95 p-2 sm:p-6" role="dialog" aria-modal="true" aria-label="Generated image fullscreen preview"><button type="button" onClick={() => setFullscreen(false)} className="absolute right-3 top-3 grid h-10 w-10 place-items-center rounded-lg border border-white/15 bg-black/60 text-white" title="Close fullscreen"><X size={18} /></button><img src={imageUrl} alt={image.prompt || "Generated image fullscreen"} className="max-h-full max-w-full object-contain" /></div>}
+      {fullscreen && imageUrl && <div className="fixed inset-0 z-[1600] grid place-items-center bg-black/95 p-2 sm:p-6" role="dialog" aria-modal="true" aria-label="Generated image fullscreen preview"><button type="button" onClick={() => setFullscreen(false)} className="absolute right-3 top-3 z-10 grid h-10 w-10 place-items-center rounded-lg border border-white/15 bg-black/60 text-white" title="Close fullscreen"><X size={18} /></button><img src={imageUrl} alt={image.prompt || "Generated image fullscreen"} className="max-h-full max-w-full object-contain" /></div>}
     </>
   );
 }

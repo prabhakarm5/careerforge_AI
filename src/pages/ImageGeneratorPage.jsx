@@ -39,14 +39,15 @@ export default function ImageGeneratorPage() {
       : { kind: "image" });
   }, [generatedImage]);
 
-  function syncHistory() {
+  function syncHistory(image) {
+    if (image?.id) historyRef.current?.upsert?.(image);
     historyRef.current?.refresh?.();
     notifyWorkspaceHistoryChanged("image");
   }
 
   function handleGenerated(image) {
     setGeneratedImage(image);
-    syncHistory();
+    syncHistory(image);
     if (image?.id) setSearchParams({ image: image.id }, { replace: true });
   }
 
@@ -68,7 +69,7 @@ export default function ImageGeneratorPage() {
     if (updated?.id && String(updated.id) === String(generatedImage?.id)) {
       setGeneratedImage(updated);
     }
-    syncHistory();
+    syncHistory(updated);
   }
 
   function startNew() {

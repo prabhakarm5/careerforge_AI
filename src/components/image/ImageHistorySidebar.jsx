@@ -44,7 +44,14 @@ const ImageHistorySidebar = forwardRef(function ImageHistorySidebar({ onSelect, 
     const timer = window.setTimeout(() => loadHistory(), 0);
     return () => window.clearTimeout(timer);
   }, [loadHistory]);
-  useImperativeHandle(ref, () => ({ refresh: () => loadHistory(true) }), [loadHistory]);
+  useImperativeHandle(ref, () => ({
+    refresh: () => loadHistory(true),
+    upsert: (image) => {
+      if (!image?.id) return;
+      setBroken((current) => { const next = new Set(current); next.delete(image.id); return next; });
+      setHistory((items) => [image, ...items.filter((item) => String(item.id) !== String(image.id))]);
+    },
+  }), [loadHistory]);
 
   const filtered = useMemo(() => {
     const q = keyword.trim().toLowerCase();
